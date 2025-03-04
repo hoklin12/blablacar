@@ -21,6 +21,7 @@ class Ride {
   final DateTime arrivalDateTime;
 
   final User driver;
+  final bool acceptPets;  // Add this property
 
   final int availableSeats;
   final double pricePerSeat;
@@ -37,6 +38,7 @@ class Ride {
     required this.driver,
     required this.availableSeats,
     required this.pricePerSeat,
+    required this.acceptPets,
   });
 
   void addPassenger(User passenger) {

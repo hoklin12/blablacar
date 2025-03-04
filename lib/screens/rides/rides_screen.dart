@@ -23,8 +23,10 @@ class RidesScreen extends StatefulWidget {
 class _RidesScreenState extends State<RidesScreen> {
  
   RidePreference currentPreference  = fakeRidePrefs[0];   // TODO 1 :  We should get it from the service
+  RidesFilter? currentFilter;
+  // List<Ride> get matchingRides => RidesService.instance.getRidesFor(currentPreference);
+  List<Ride> get matchingRides => RidesService.instance.getRides(currentPreference, currentFilter);
 
-  List<Ride> get matchingRides => RidesService.getRidesFor(currentPreference);
 
   void onBackPressed() {
     Navigator.of(context).pop();     //  Back to the previous view
