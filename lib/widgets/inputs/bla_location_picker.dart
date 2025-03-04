@@ -9,7 +9,7 @@ import '../../theme/theme.dart';
 ///
 class BlaLocationPicker extends StatefulWidget {
   final Location?
-      initLocation; // The picker can be triguer with an existing location name
+  initLocation; // The picker can be triguer with an existing location name
 
   const BlaLocationPicker({super.key, this.initLocation});
 
@@ -55,38 +55,40 @@ class _BlaLocationPickerState extends State<BlaLocationPicker> {
   }
 
   List<Location> getLocationsFor(String text) {
-    return LocationsService.availableLocations
+    return LocationsService.instance.getLocations()
         .where((location) =>
-            location.name.toUpperCase().contains(text.toUpperCase()))
+        location.name.toUpperCase().contains(text.toUpperCase()))
         .toList();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Padding(
-      padding: const EdgeInsets.only(
-          left: BlaSpacings.m, right: BlaSpacings.m, top: BlaSpacings.s),
-      child: Column(
-        children: [
-          // Top search Search bar
-          BlaSearchBar(
-            onBackPressed: onBackSelected,
-            onSearchChanged: onSearchChanged,
-          ),
-
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredLocations.length,
-              itemBuilder: (ctx, index) => LocationTile(
-                location: filteredLocations[index],
-                onSelected: onLocationSelected,
+          padding: const EdgeInsets.only(
+              left: BlaSpacings.m, right: BlaSpacings.m, top: BlaSpacings.s),
+          child: Column(
+            children: [
+              // Top search Search bar
+              BlaSearchBar(
+                onBackPressed: onBackSelected,
+                onSearchChanged: onSearchChanged,
               ),
-            ),
+
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredLocations.length,
+                  itemBuilder: (ctx, index) => LocationTile(
+                    location: filteredLocations[index],
+                    onSelected: onLocationSelected,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }
 
@@ -163,7 +165,7 @@ class _BlaSearchBarState extends State<BlaSearchBar> {
       decoration: BoxDecoration(
         color: BlaColors.backgroundAccent,
         borderRadius:
-            BorderRadius.circular(BlaSpacings.radius), // Rounded corners
+        BorderRadius.circular(BlaSpacings.radius), // Rounded corners
       ),
       child: Row(
         children: [
@@ -196,13 +198,13 @@ class _BlaSearchBarState extends State<BlaSearchBar> {
 
           searchIsNotEmpty // A clear button appears when search contains some text
               ? IconButton(
-                  icon: Icon(Icons.close, color: BlaColors.iconLight),
-                  onPressed: () {
-                    _controller.clear();
-                    _focusNode.requestFocus(); // Ensure it stays focused
-                    onChanged("");
-                  },
-                )
+            icon: Icon(Icons.close, color: BlaColors.iconLight),
+            onPressed: () {
+              _controller.clear();
+              _focusNode.requestFocus(); // Ensure it stays focused
+              onChanged("");
+            },
+          )
               : SizedBox.shrink(), // Hides the icon if text field is empty
         ],
       ),
