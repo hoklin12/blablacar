@@ -1,75 +1,73 @@
 import 'package:flutter/material.dart';
+
 import '../../theme/theme.dart';
 
-/// Enum to define button color and label
-enum BlaButtonStyle {
-  primary,
-  secondary,
-}
+enum ButtonType { primary, secondary }
 
+///
+/// Button rendering for the whole application
+///
 class BlaButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
-  final BlaButtonStyle style;
+  final String text;
+  final VoidCallback? onPressed;
+  final ButtonType type;
   final IconData? icon;
 
-  const BlaButton({
-    Key? key,
-    required this.label,
-    required this.onPressed,
-    this.style = BlaButtonStyle.primary,
-    this.icon,
-  }) : super(key: key);
-
-  /// switch background color with switch
-  Color get backgroundColor {
-    switch (style) {
-      case BlaButtonStyle.primary:
-        return BlaColors.primary;
-      case BlaButtonStyle.secondary:
-        return BlaColors.white;
-    }
-  }
- /// use switch for check label color style
-  Color get labelColor {
-    switch (style) {
-      case BlaButtonStyle.primary:
-        return BlaColors.white;
-      case BlaButtonStyle.secondary:
-        return BlaColors.primary;
-    }
-  }
-
-
+  const BlaButton(
+      {super.key,
+      required this.text,
+      required this.onPressed,
+      this.type = ButtonType.primary,
+      this.icon});
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
-        textStyle: BlaTextStyles.button,
-        foregroundColor: labelColor,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+
+    // Compute the rendering
+    Color backgroundColor =
+        type == ButtonType.primary ? BlaColors.primary : BlaColors.white;
+
+    BorderSide border = type == ButtonType.primary
+        ? BorderSide.none
+        : BorderSide(color: BlaColors.greyLight, width: 2);
+
+    Color textColor =
+        type == ButtonType.primary ? BlaColors.white : BlaColors.primary;
+        
+    Color iconColor =
+        type == ButtonType.primary ? BlaColors.white : BlaColors.primary;
+
+
+  	// Create the button icon - if any
+    List<Widget> children = [];
+    if (icon != null) {
+      children.add(Icon(icon, size: 20, color: iconColor,));
+      children.add(SizedBox(width: BlaSpacings.s));
+    }
+
+    // Create the button text
+    Text buttonText =
+        Text(text, style: BlaTextStyles.button.copyWith(color: textColor));
+
+    children.add(buttonText);
+
+    // Render the button
+    return SizedBox(
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          padding: EdgeInsets.symmetric(vertical: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(BlaSpacings.radius),
+          ),
+          side: border,
+        ),
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: children,
+        ),
       ),
-      child: _buildButtonContent(),
     );
   }
-
-  ///check icon to build button content
-  Widget _buildButtonContent() {
-      if (icon != null) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: labelColor, size: 20),
-            const SizedBox(width: 8),
-            Text(label, style: TextStyle(color: labelColor)),
-          ],
-        );
-      } else {
-        return Text(label, style: TextStyle(color: labelColor));
-      }
-    }
-  }
-
+}
