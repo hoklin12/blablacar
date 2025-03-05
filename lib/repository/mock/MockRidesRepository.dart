@@ -38,7 +38,7 @@ class MockRidesRepository extends RidesRepository {
         verifiedProfile: true,
       ),
       acceptPets: false,
-      availableSeats: 2,
+      availableSeats: 0,
       pricePerSeat: 10.0,
     ),
     Ride(
@@ -94,6 +94,21 @@ class MockRidesRepository extends RidesRepository {
     ),
   ];
 
+  // @override
+  // List<Ride> getRides(RidePreference preference, RidesFilter? filter) {
+  //   return rides.where((ride) {
+  //     final matchesLocation =
+  //         ride.departureLocation == preference.departure &&
+  //             ride.arrivalLocation == preference.arrival;
+  //
+  //     // Check pet policy: if filter is null, accept any pet policy
+  //     final matchesPetPolicy = filter == null ||
+  //         filter.acceptPets == null ||
+  //         ride.acceptPets == filter.acceptPets;
+  //
+  //     return matchesLocation && matchesPetPolicy;
+  //   }).toList();
+  // }
   @override
   List<Ride> getRides(RidePreference preference, RidesFilter? filter) {
     return rides.where((ride) {
@@ -106,8 +121,12 @@ class MockRidesRepository extends RidesRepository {
           filter.acceptPets == null ||
           ride.acceptPets == filter.acceptPets;
 
-      return matchesLocation && matchesPetPolicy;
+      // Check available seats
+      final hasEnoughSeats = ride.availableSeats >= preference.requestedSeats;
+      return matchesLocation && matchesPetPolicy && hasEnoughSeats;
+
     }).toList();
   }
+
 
 }

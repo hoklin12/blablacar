@@ -18,7 +18,8 @@ void main() {
       final now = DateTime.now(); // Get the current date and time
       final preference = RidePreference(
         departure: Location(name: 'Battambang', country: Country.cambodia),
-        departureDate: DateTime(now.year, now.month, 0, 0), // Last day of the previous month at midnight
+        departureDate: DateTime(now.year, now.month, now.day, 0, 0, 0), // Last day of the previous month at midnight
+        // departureDate: DateTime.now(),
         arrival: Location(name: 'SiemReap', country: Country.cambodia),
         requestedSeats: 1,
       );
@@ -53,7 +54,8 @@ void main() {
       final now = DateTime.now(); // Get the current date and time
       final preference = RidePreference(
         departure: Location(name: 'Battambang', country: Country.cambodia),
-        departureDate: DateTime(now.year, now.month, 0, 0), // Last day of the previous month at midnight
+        departureDate: DateTime(now.year, now.month, now.day, 0, 0, 0), // Last day of the previous month at midnight
+        // departureDate: DateTime.now(),
         arrival: Location(name: 'SiemReap', country: Country.cambodia),
         requestedSeats: 1,
       );
