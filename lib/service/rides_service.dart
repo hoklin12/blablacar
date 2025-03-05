@@ -74,34 +74,29 @@ class RidesService {
   //   // For now, just a test
   //   return availableRides.where( (ride) => ride.departureLocation == preferences.departure && ride.arrivalLocation == preferences.arrival).toList();
 
-  static RidesService? _instance;
-  late final RidesRepository repository;
+  // Private constructor
+  RidesService._();
 
-  RidesService._internal(this.repository);
+  static final RidesService _instance = RidesService._();
 
-  /// **Initializer method to set up the repository**
+  static RidesService get instance => _instance;
+
+  // Repository used by the service
+  late RidesRepository _repository;
+
+  // Initializer method to set the repository
   static void initialize(RidesRepository repository) {
-    if (_instance == null) {
-      _instance = RidesService._internal(repository);
-    }
+    instance._repository = repository;
   }
 
-  /// Singleton Instance Getter
-  static RidesService get instance {
-    if (_instance == null) {
-      throw Exception("RidesService is not initialized. Call initialize(repository) first.");
-    }
-    return _instance!;
-  }
-
-  /// Service API for retrieving rides based on preference & filter
+  // API to get rides
   List<Ride> getRides(RidePreference preference, RidesFilter? filter) {
-    return repository.getRides(preference, filter);
+    return _repository.getRides(preference, filter);
   }
 }
 
 class RidesFilter {
-  final bool acceptPets;
+  final bool? acceptPets;
 
   RidesFilter(this.acceptPets);
 

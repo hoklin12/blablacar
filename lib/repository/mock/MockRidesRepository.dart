@@ -1,9 +1,9 @@
 import 'package:week_3_blabla_project/repository/ride_repository.dart';
-import 'package:week_3_blabla_project/service/rides_service.dart';
 import '../../model/ride/locations.dart';
 import '../../model/ride/ride.dart';
 import '../../model/ride_pref/ride_pref.dart';
 import '../../model/user/user.dart';
+import '../../service/rides_service.dart';
 
 class MockRidesRepository extends RidesRepository {
   final List<Ride> rides = [
@@ -20,7 +20,7 @@ class MockRidesRepository extends RidesRepository {
         profilePicture: '',
         verifiedProfile: true,
       ),
-      acceptPets: true,
+      acceptPets: false,
       availableSeats: 2,
       pricePerSeat: 10.0,
     ),
@@ -37,7 +37,7 @@ class MockRidesRepository extends RidesRepository {
         profilePicture: '',
         verifiedProfile: true,
       ),
-      acceptPets: true,
+      acceptPets: false,
       availableSeats: 2,
       pricePerSeat: 10.0,
     ),
@@ -54,7 +54,7 @@ class MockRidesRepository extends RidesRepository {
         profilePicture: '',
         verifiedProfile: true,
       ),
-      acceptPets: true,
+      acceptPets: false,
       availableSeats: 1,
       pricePerSeat: 10.0,
     ),
@@ -88,7 +88,7 @@ class MockRidesRepository extends RidesRepository {
         profilePicture: '',
         verifiedProfile: true,
       ),
-      acceptPets: true,
+      acceptPets: false,
       availableSeats: 1,
       pricePerSeat: 10.0,
     ),
@@ -97,14 +97,17 @@ class MockRidesRepository extends RidesRepository {
   @override
   List<Ride> getRides(RidePreference preference, RidesFilter? filter) {
     return rides.where((ride) {
-      bool matchesFilter = true;
+      final matchesLocation =
+          ride.departureLocation == preference.departure &&
+              ride.arrivalLocation == preference.arrival;
 
-      if (filter != null) {
-        if (filter.acceptPets != null) {
-          matchesFilter = matchesFilter && ride.acceptPets == filter.acceptPets;
-        }
-      }
-      return matchesFilter;
+      // Check pet policy: if filter is null, accept any pet policy
+      final matchesPetPolicy = filter == null ||
+          filter.acceptPets == null ||
+          ride.acceptPets == filter.acceptPets;
+
+      return matchesLocation && matchesPetPolicy;
     }).toList();
   }
+
 }
